@@ -11,6 +11,8 @@
 
 #include "document.hpp"
 
+#include <iostream>
+
 CSMDoc::DocumentManager::DocumentManager (const Files::ConfigurationManager& configuration)
 : mConfiguration (configuration), mEncoding (ToUTF8::WINDOWS_1252), mVFS(NULL)
 {
@@ -36,6 +38,29 @@ CSMDoc::DocumentManager::DocumentManager (const Files::ConfigurationManager& con
         &mLoader, SLOT (abortLoading (CSMDoc::Document *)));
     connect (&mLoader, SIGNAL (loadMessage (CSMDoc::Document *, const std::string&)),
         this, SIGNAL (loadMessage (CSMDoc::Document *, const std::string&)));
+}
+
+void CSMDoc::DocumentManager::reloadDocument
+    (const std::vector<boost::filesystem::path>& files,
+     const boost::filesystem::path& savePath,
+     bool new_)
+{
+    // backups the old vector, prepares the old one to be rewritten
+    std::vector<Document *> tmp = mDocuments;
+    mDocuments.resize(0);
+
+    for (std::vector<Document *>::iterator iter (tmp.begin()); iter!=tmp.end(); ++iter)
+    {
+        // backup
+        boost::filesystem::path savePath = (*iter)->getSavePath();
+        std::vector<boost::filesystem::path> files = (*iter)->getContentFiles();
+
+        // reload
+        Document* doc = makeDocument (files, savePath, false);
+        insertDocument (doc);
+
+        delete *iter;
+    }
 }
 
 CSMDoc::DocumentManager::~DocumentManager()

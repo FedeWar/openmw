@@ -172,6 +172,7 @@ CSVDoc::View *CSVDoc::ViewManager::addView (CSMDoc::Document *document)
     view->toggleStatusBar (CSMPrefs::get()["Windows"]["show-statusbar"].isTrue());
     view->show();
 
+    connect (view, SIGNAL (reloadRequest ()), this, SIGNAL (reloadRequest()));
     connect (view, SIGNAL (newGameRequest ()), this, SIGNAL (newGameRequest()));
     connect (view, SIGNAL (newAddonRequest ()), this, SIGNAL (newAddonRequest()));
     connect (view, SIGNAL (loadDocumentRequest ()), this, SIGNAL (loadDocumentRequest()));

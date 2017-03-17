@@ -67,6 +67,8 @@ namespace CSVDoc
 
         signals:
 
+            void reloadRequest();
+
             void newGameRequest();
 
             void newAddonRequest();

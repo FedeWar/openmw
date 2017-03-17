@@ -78,6 +78,11 @@ namespace CSMDoc
 
             bool isEmpty();
 
+            void reloadDocument
+                (const std::vector<boost::filesystem::path>& files,
+                 const boost::filesystem::path& savePath,
+                 bool new_);
+
         private:
 
             boost::filesystem::path mResDir;
@@ -122,6 +127,8 @@ namespace CSMDoc
             void cancelLoading (CSMDoc::Document *document);
 
             void loadMessage (CSMDoc::Document *document, const std::string& message);
+
+            void reloadRequest (CSMDoc::Document *);
     };
 }
 

@@ -109,6 +109,8 @@ namespace CS
 
             void mergeDocument (CSMDoc::Document *document);
 
+            void reloadRequest();
+
         private:
 
             QString mIpcServerName;

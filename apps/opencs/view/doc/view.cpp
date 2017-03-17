@@ -52,7 +52,6 @@ void CSVDoc::View::setupFileMenu()
     setupShortcut("document-file-newgame", newGame);
     file->addAction (newGame);
 
-
     QAction *newAddon = new QAction (tr ("New Addon"), this);
     connect (newAddon, SIGNAL (triggered()), this, SIGNAL (newAddonRequest()));
     setupShortcut("document-file-newaddon", newAddon);
@@ -67,6 +66,10 @@ void CSVDoc::View::setupFileMenu()
     connect (mSave, SIGNAL (triggered()), this, SLOT (save()));
     setupShortcut("document-file-save", mSave);
     file->addAction (mSave);
+
+    QAction *reload = new QAction (tr ("Reload - TEST"), this);
+    connect (reload, SIGNAL (triggered()), this, SIGNAL (reloadRequest()));
+    file->addAction (reload);
 
     mVerify = new QAction (tr ("Verify"), this);
     connect (mVerify, SIGNAL (triggered()), this, SLOT (verify()));

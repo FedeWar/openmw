@@ -19,6 +19,8 @@
 #include <Windows.h>
 #endif
 
+#include <iostream>
+
 using namespace Fallback;
 
 CS::Editor::Editor ()
@@ -55,6 +57,7 @@ CS::Editor::Editor ()
     connect (&mViewManager, SIGNAL (loadDocumentRequest ()), this, SLOT (loadDocument ()));
     connect (&mViewManager, SIGNAL (editSettingsRequest()), this, SLOT (showSettings ()));
     connect (&mViewManager, SIGNAL (mergeDocument (CSMDoc::Document *)), this, SLOT (mergeDocument (CSMDoc::Document *)));
+    connect (&mViewManager, SIGNAL (reloadRequest ()), this, SLOT(reloadRequest()));
 
     connect (&mStartup, SIGNAL (createGame()), this, SLOT (createGame ()));
     connect (&mStartup, SIGNAL (createAddon()), this, SLOT (createAddon ()));
@@ -71,6 +74,15 @@ CS::Editor::Editor ()
     connect (&mNewGame, SIGNAL (createRequest (const boost::filesystem::path&)),
              this, SLOT (createNewGame (const boost::filesystem::path&)));
     connect (&mNewGame, SIGNAL (cancelCreateGame()), this, SLOT (cancelCreateGame ()));
+}
+
+bool reloading = false;
+
+// FIXME placeholder
+void CS::Editor::reloadRequest()
+{
+    reloading = true;
+    mDocumentManager.reloadDocument({}, "", false);
 }
 
 CS::Editor::~Editor ()
@@ -366,7 +378,10 @@ int CS::Editor::run()
 
 void CS::Editor::documentAdded (CSMDoc::Document *document)
 {
-    mViewManager.addView (document);
+    if(!reloading)
+        mViewManager.addView (document);
+    else
+        reloading = false;
 }
 
 void CS::Editor::documentAboutToBeRemoved (CSMDoc::Document *document)
